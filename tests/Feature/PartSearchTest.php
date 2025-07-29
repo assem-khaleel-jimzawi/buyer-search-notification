@@ -18,8 +18,7 @@ class PartSearchTest extends TestCase
         Part::create(['name' => 'Brake Pad']);
 
         // Act
-        $response = $this->getJson('/search?query=batt');
-
+        $response = $this->getJson('/api/search?query=batt');
         // Assert
         $response->assertStatus(200);
         $response->assertJsonCount(1);

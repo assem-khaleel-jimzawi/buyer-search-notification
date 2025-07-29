@@ -14,10 +14,12 @@ class PartFactory extends Factory
      *
      * @return array<string, mixed>
      */
-    public function definition(): array
-    {
-        return [
-            //
-        ];
-    }
+ public function definition(): array
+{
+    return [
+        'name' => $this->faker->word(),
+        'description' => $this->faker->sentence(),
+        'price' => $this->faker->randomFloat(2, 10, 1000),
+    ];
+}
 }
