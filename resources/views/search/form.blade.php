@@ -1,6 +1,3 @@
-@extends('layouts.app')
-
-@section('content')
     <form method="POST" action="{{ route('search.handle') }}">
         @csrf
         <input type="text" name="query" placeholder="Search parts..." required>
@@ -14,4 +11,3 @@
     @error('query')
         <p style="color: red">{{ $message }}</p>
     @enderror
-@endsection

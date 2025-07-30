@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\SearchQuery;
 use Illuminate\Support\Facades\Auth;
-use App\Jobs\ProcessSearchJob; 
+use App\Jobs\ProcessSearchJob;
+use App\Models\SearchQuery;
 
 class SearchController extends Controller
 {
@@ -29,7 +29,7 @@ class SearchController extends Controller
 
         // Store the search query with the authenticated user
         $searchQuery = SearchQuery::create([
-            'user_id' => Auth::id(),
+            'user_id' =>Auth::check() ? Auth::id() : null,
             'query' => $validated['query'],
         ]);
 
@@ -39,5 +39,4 @@ class SearchController extends Controller
         // Return the user back with a status message
         return back()->with('status', 'Your search is being processed.');
     }
-
 }
