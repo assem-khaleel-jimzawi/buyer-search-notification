@@ -16,7 +16,8 @@ Route::get('/api/search', function (Illuminate\Http\Request $request) {
         'query' => 'required|string|max:255',
     ]);
 
-    $matches = Part::whereFullText('name', $validated['query'])->get();
+    // Use LIKE search instead of full-text search for better compatibility
+    $matches = Part::where('name', 'LIKE', '%' . $validated['query'] . '%')->get();
 
     return response()->json($matches);
 });
