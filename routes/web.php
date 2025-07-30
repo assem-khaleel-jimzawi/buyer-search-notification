@@ -10,6 +10,7 @@ Route::get('/', function () {
 
 Route::get('/search', [SearchController::class, 'form'])->name('search.form');
 Route::post('/search', [SearchController::class, 'handle'])->name('search.handle');
+Route::get('/search/results', [SearchController::class, 'results'])->name('search.results');
 
 Route::get('/api/search', function (Illuminate\Http\Request $request) {
     $validated = $request->validate([

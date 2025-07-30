@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Jobs\ProcessSearchJob;
 use App\Models\SearchQuery;
+use App\Models\SearchResult;
 
 class SearchController extends Controller
 {
@@ -29,14 +30,40 @@ class SearchController extends Controller
 
         // Store the search query with the authenticated user
         $searchQuery = SearchQuery::create([
-            'user_id' =>Auth::check() ? Auth::id() : null,
+            'user_id' => Auth::check() ? Auth::id() : null,
             'query' => $validated['query'],
         ]);
 
         // Dispatch a job to process the search asynchronously
         dispatch(new ProcessSearchJob($searchQuery));
 
-        // Return the user back with a status message
-        return back()->with('status', 'Your search is being processed.');
+        // Redirect to results page with immediate search
+        return redirect()->route('search.results', ['query' => $validated['query']]);
+    }
+
+    /**
+     * Show search results.
+     */
+    public function results(Request $request)
+    {
+        $query = $request->get('query');
+        
+        if (!$query) {
+            return redirect()->route('search.form');
+        }
+
+        // Get immediate results from parts table
+        $results = \App\Models\Part::where('name', 'LIKE', '%' . $query . '%')
+            ->get()
+            ->map(function ($part) {
+                return (object) [
+                    'part' => $part
+                ];
+            });
+
+        return view('search.results', [
+            'query' => $query,
+            'results' => $results
+        ]);
     }
 }
